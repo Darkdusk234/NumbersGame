@@ -9,14 +9,29 @@ namespace NumbersGame
             bool run = true;
             while(run)
             {
-                //Introduces what the program does and asks the user to input max number for the game
+                //Introduces what the program does and asks the user to input max number for the game. Repeats if invalid input
                 Write("Vi kommer spela ett spel av gissa numret. " +
                     "Skriv vilken siffra som jag mellan noll och det ska välja ett nummer från.");
-                int maxNum = Convert.ToInt32(Console.ReadLine());
+                int maxNum;
+                while(!int.TryParse(Console.ReadLine(), out maxNum))
+                {
+                    Console.Clear();
+                    Write("Du skrev inte en gilitlig siffra.");
+                    Write("Vi kommer spela ett spel av gissa numret. " +
+                    "Skriv vilken siffra som jag mellan noll och det ska välja ett nummer från.");
+                }
 
-                //Asks the user how many tries they want
+                //Asks the user how many tries they want.
+                //Repeats if invalid input and cleans up console so it doesn't take up more space if multiple wrong inputs are put in.
                 Write("Hur många försök vill du ha?");
-                int tries = Convert.ToInt32(Console.ReadLine());
+                int tries;
+                int cursorPos = Console.CursorTop;
+                while(!int.TryParse(Console.ReadLine(), out tries))
+                {
+                    Console.SetCursorPosition(0, cursorPos - 1);
+                    Write("Du skrev inte en giltlig siffra.");
+                    Write("Hur många försök vill du ha?");
+                }
 
                 //Starts the game and generates the number for the user to guess
                 Write($"Välkommen! Jag tänker nu på ett nummer. Kan du gissa vilket? Du får {tries} försök");
@@ -35,8 +50,15 @@ namespace NumbersGame
                     }
 
                     
-                    //Takes in the users guess and calls on the correctGuess method to check if it is correct, if it is breaks the loop
-                    string guess = Console.ReadLine();
+                    //Takes in the users guess and calls on the correctGuess method to check if it is correct, if it is breaks the loop.
+                    //Throws out a message if input is invalid and doesn't let you keep guessing until valid input is inputted
+                    int guess;
+                    cursorPos = Console.CursorTop;
+                    while(!int.TryParse(Console.ReadLine(), out guess))
+                    {
+                        Console.SetCursorPosition(0, cursorPos);
+                        Write("Din gissning var inte ett giltligt tal. Försök igen.");
+                    }
                     int guessNum = Convert.ToInt32(guess);
                     bool correctGuess = CheckGuess(guessNum, number);
                     if (correctGuess)
@@ -45,7 +67,7 @@ namespace NumbersGame
                     }
                 }
 
-                //Checks if the user wants to play again and if not breaks the while loop
+                //Checks if the user wants to play again and if not breaks the while loop. If user wants to keep going clears the console.
                 Write("Vill du spela igen skriv då ja?");
                 string cont = Console.ReadLine();
 
@@ -53,6 +75,7 @@ namespace NumbersGame
                 {
                     run = false;
                 }
+                Console.Clear();
             }
 
         }
@@ -91,7 +114,7 @@ namespace NumbersGame
                 }
                 correct = true;
             }
-            //Checks if the guess is 
+            //Checks if the guess is within 5 of the number and responds with a unique message if it is.
             else if (number - guess <= 5 && number - guess >= 0 || number - guess >= -5 && number - guess <= 0)
             {
                 int close = rnd.Next(0, 3);
