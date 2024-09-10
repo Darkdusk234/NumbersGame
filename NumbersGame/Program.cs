@@ -91,7 +91,7 @@ namespace NumbersGame
                 }
                 correct = true;
             }
-            //Checks if the guess is 
+            //Checks if the guess is within 5 of the number and responds with a unique message if it is.
             else if (number - guess <= 5 && number - guess >= 0 || number - guess >= -5 && number - guess <= 0)
             {
                 int close = rnd.Next(0, 3);
